@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Router Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        input, button {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0 12px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Router Management</h1>
+
+    <h2>Add Router</h2>
+    <form method="POST">
+        <label for="ip">Router IP Address</label>
+        <input id="ip" name="ip" placeholder="192.168.1.1" required>
+
+        <label for="username">Username</label>
+        <input id="username" name="username" required>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" required>
+
+        <button type="submit">Save Router</button>
+    </form>
+
+    <h2>Saved Routers</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Router IP</th>
+                <th>Username</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for router in routers %}
+            <tr>
+                <td>{{ router.ip }}</td>
+                <td>{{ router.username }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="2">No routers saved yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
