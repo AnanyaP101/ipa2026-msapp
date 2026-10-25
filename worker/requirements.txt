@@ -1,0 +1,5 @@
+pika
+pymongo
+netmiko
+ntc-templates
+paramiko==2.12.0

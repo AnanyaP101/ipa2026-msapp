@@ -3,72 +3,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Router Management</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>IPA2026 - Router Dashboard</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 850px;
+            max-width: 1100px;
             margin: 40px auto;
             padding: 0 20px;
+            color: #1f2937;
+            background: #f5f7fb;
         }
-        input, button {
-            box-sizing: border-box;
-            width: 100%;
-            padding: 10px;
-            margin: 6px 0 12px;
+
+        h1 {
+            color: #17365d;
         }
+
+        .panel {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #00000010;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 16px;
         }
+
         th, td {
-            border: 1px solid #ccc;
-            padding: 10px;
+            padding: 14px;
+            border-bottom: 1px solid #e5e7eb;
             text-align: left;
         }
-        button {
-            cursor: pointer;
+
+        th {
+            background: #17365d;
+            color: white;
+        }
+
+        a {
+            color: #1769aa;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .empty {
+            color: #6b7280;
+            padding: 20px 0;
         }
     </style>
 </head>
+
 <body>
-    <h1>Router Management</h1>
+    <h1>Router Dashboard</h1>
 
-    <h2>Add Router</h2>
-    <form method="POST">
-        <label for="ip">Router IP Address</label>
-        <input id="ip" name="ip" placeholder="192.168.1.1" required>
+    <div class="panel">
+        <h2>Router List</h2>
 
-        <label for="username">Username</label>
-        <input id="username" name="username" required>
+        {% if routers %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Router IP</th>
+                    <th>Username</th>
+                    <th>Interface Count</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
 
-        <label for="password">Password</label>
-        <input id="password" name="password" type="password" required>
+            <tbody>
+                {% for router in routers %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for(
+                            'router_detail',
+                            router_id=router['_id']
+                        ) }}">
+                            {{ router.get('ip', 'Unknown') }}
+                        </a>
+                    </td>
 
-        <button type="submit">Save Router</button>
-    </form>
+                    <td>{{ router.get('username', '-') }}</td>
 
-    <h2>Saved Routers</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Router IP</th>
-                <th>Username</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for router in routers %}
-            <tr>
-                <td>{{ router.ip }}</td>
-                <td>{{ router.username }}</td>
-            </tr>
-            {% else %}
-            <tr>
-                <td colspan="2">No routers saved yet.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                    <td>{{ router.get('interfaces', []) | length }}</td>
+
+                    <td>
+                        {% if router.get('interface_status_updated_at') %}
+                            {{ router['interface_status_updated_at'] }}
+                        {% else %}
+                            Not updated yet
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="empty">No routers found in the database.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
